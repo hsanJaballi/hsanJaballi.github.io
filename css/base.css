@@ -1,0 +1,35 @@
+*, html {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    color: #323130;
+    background-color: #faf9f8;
+    font-family: 'Cairo', Arial, Helvetica, sans-serif;
+}
+
+h1 {
+    width: max-content;
+}
+
+.headings {
+    padding: .5rem;
+    border: 2px solid #323130;
+}
+
+.with-pronouns {
+    position: relative;
+}
+
+.with-pronouns::after {
+    content: 'He/Him';
+    position: absolute;
+    top: 0;
+    left: -20%;
+    font-size: .83rem;
+    width: auto;
+    height: auto;
+    padding: .1rem .25rem;
+}
