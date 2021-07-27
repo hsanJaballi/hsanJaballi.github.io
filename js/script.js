@@ -13,6 +13,11 @@ const init = () => {
             const el = document.createElement(`repository-item`);
             el.setAttribute(`rname`, o.name);
             el.setAttribute(`rdescription`, o.description);
+            if (i === 0) {
+                el.setAttribute(`isOpen`, `true`);
+            } else {
+                el.setAttribute(`isOpen`, `false`);
+            }
             target.appendChild(el);
         })
 
