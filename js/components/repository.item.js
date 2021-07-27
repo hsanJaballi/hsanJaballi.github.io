@@ -5,53 +5,71 @@ repositoryTemplate.innerHTML = `
         #toggle {
             background-color: red;
         }
+        .is-closed {
+            display: none;
+        }
+        .highlights {
+            display: flex;
+            width: max-content;
+            flex-direction: row-reverse;
+        }
     </style>
     <div class="repository-item">
         <div class="highlights">
             <span id="repository-name"></span>
-            <span id="toggle">toggle</span>
+            <span id="icon-wrapper">
+                <arrow-icon adirection="left">
+            </span>
         </div>
-        <div id="details">
+        <div id="details" class="is-closed">
             <p id="repository-description"></p>
         </div>
     </div>
 `;
 
 class RepositoryItem extends HTMLElement {
-    constructor () {
+    constructor() {
         super();
+        this.attachShadow({ mode: `open` });
 
-        this.attachShadow({mode: `open`});
 
         this.shadowRoot.appendChild(repositoryTemplate.content.cloneNode(true))
-        
     }
 
-    static observedAttributes () {
-        return [`rname`, `rdescription`, `open`];
+    static observedAttributes() {
+        return [`rname`, `rdescription`, `isOpen`];
     }
 
     connectedCallback() {
         const name = this.shadowRoot.getElementById(`repository-name`);
         const description = this.shadowRoot.getElementById(`repository-description`);
+        const iconWrapper = this.shadowRoot.getElementById(`icon-wrapper`);
+        const arrowIcon = iconWrapper.getElementsByTagName(`arrow-icon`)[0];
+        const detailsContainer = this.shadowRoot.getElementById(`details`);
 
-        const toggle = this.shadowRoot.getElementById(`toggle`);
-
-        toggle.addEventListener(`click`, (event) => {
-            this.setAttribute(`open`, !(this.getAttribute(`open`).length))
-            console.log(`currently ${this.getAttribute(`open`)}`)
+        iconWrapper.addEventListener(`click`, (event) => {
+            if (this.getAttribute(`isOpen`) === `true`) {
+                this.setAttribute(`isOpen`, `false`);
+                arrowIcon.adirection = "left";
+                detailsContainer.classList.add(`is-closed`);
+            } else {
+                this.setAttribute(`isOpen`, `true`);
+                arrowIcon.adirection = "down";
+                detailsContainer.classList.remove(`is-closed`);
+            }
         })
-        this.setAttribute(`open`, ``)
-        
+        console.log(`got >> ${this.getAttribute(`isopen`)}`)
+
+        if (this.getAttribute(`isopen`) === `true`) {
+            arrowIcon.setAttribute(`adirection`, `down`);
+            detailsContainer.classList.remove(`is-closed`);
+        }
+
+        console.log(this.isOpen)
+
         name.textContent = this.rname;
         description.textContent = this.rdescription;
     }
-    
-    /*
-    attributeChangedCallback(name, oldValue, newValue) {
-        
-    }
-    */
 
     get rname() {
         return this.getAttribute(`rname`);
@@ -69,12 +87,24 @@ class RepositoryItem extends HTMLElement {
         this.setAttribute(`rdescription`, nextValue);
     }
 
-    get open() {
-        return this.getAttribute(`open`);
+    get isOpen() {
+        return this.getAttribute(`isOpen`);
     }
 
-    set open(nextValue) {
-        this.setAttribute(`open`, nextValue);
+    set isOpen(nextValue) {
+        this.setAttribute(`isOpen`, nextValue);
+        /*
+        switch(nextValue) {
+            case `false`:
+                arrowIcon.adirection = `left`;
+                break;
+            case `true`:
+                arrowIcon.adirection = `down`;
+                break;
+            default:
+                arrowIcon.adirection = `left`;
+        }
+        */
     }
 }
 
